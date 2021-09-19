@@ -20,11 +20,11 @@ const transaction = require("./transaction");
 ); */
 
 // 3; TME <> Staking Pool
-transaction.printERC20Txs(
+/* transaction.printERC20Txs(
     config.ADDRESS_TME,
     config.ADDRESS_STAKING_POOL,
     tme.addresses
-);
+); */
 
 // 4; TME <> Hatchery
 /* transaction.printERC20Txs(
@@ -34,11 +34,11 @@ transaction.printERC20Txs(
 ); */
 
 // 5; TMA <> Staking Pool
-/* transaction.printERC721Txs(
+transaction.printERC721Txs(
     config.ADDRESS_TMA,
     config.ADDRESS_STAKING_POOL,
     tma.addresses
-); */
+);
 
 // 6; TMA <> Hatchery
 /* transaction.printERC721Txs(
