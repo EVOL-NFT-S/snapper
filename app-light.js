@@ -10,9 +10,7 @@ const tmc = require("./tmc");
 const tme = require("./tme");
 const tma = require("./tma");
 
-const provider = new ethers.providers.JsonRpcProvider(
-    "https://mainnet.infura.io/v3/f4dc51031cb040ee8ea63e05dc1a5311"
-);
+const provider = new ethers.providers.JsonRpcProvider(config.INFURA_ENDPOINT);
 
 const stakingContract = new ethers.Contract(
     config.ADDRESS_STAKING_POOL,

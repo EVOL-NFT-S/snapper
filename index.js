@@ -35,11 +35,11 @@ const address = require("./address");
 ); */
 
 // 5; TMA <> Staking Pool
-transaction.printERC721Txs(
+/*transaction.printERC721Txs(
     config.ADDRESS_TMA,
     config.ADDRESS_STAKING_POOL,
     tma.addresses
-);
+);*/
 
 // 6; TMA <> Hatchery
 /* transaction.printERC721Txs(
@@ -51,8 +51,8 @@ transaction.printERC721Txs(
 // before 5; TMA all
 // transaction.printAllERC721Txs(config.ADDRESS_TMA);
 
-/* const run = async () => {
+const run = async () => {
     console.log(await address.getAddresses());
-}; 
+};
 
-run(); */
+run();

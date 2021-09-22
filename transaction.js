@@ -4,6 +4,8 @@ const api = require("./api");
 const printERC20Txs = (contract, address, addresses) => {
     const balances = {};
 
+    address = address.toLowerCase();
+
     axios.get(api.GetERC20Tx(contract, address)).then((response) => {
         // console.log(response.data);
         const { data } = response;
@@ -37,6 +39,8 @@ const printERC20Txs = (contract, address, addresses) => {
 const printERC721Txs = (contract, address, addresses) => {
     const nftIds = {};
     const balances = {};
+
+    address = address.toLowerCase();
 
     axios.get(api.GetERC721Tx(contract, address)).then((response) => {
         // console.log(response.data);

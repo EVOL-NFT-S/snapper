@@ -27,7 +27,7 @@ const scanTMAPool = async (
                             ? tmaStakingBalances[address].add(staking)
                             : staking;
 
-                        const reward = BigNumber.from(0);
+                        let reward = BigNumber.from(0);
 
                         for (let i = 0; i < staking.toNumber(); i++) {
                             const tamagId =
@@ -40,9 +40,9 @@ const scanTMAPool = async (
                                 await stakingContract.pendingTMCForTamag(
                                     poolId,
                                     address,
-                                    tamagId
+                                    tamagId.toNumber()
                                 );
-                            reward.add(pending);
+                            reward = reward.add(pending);
                         }
 
                         tmcStakingBalances[address] = tmcStakingBalances[

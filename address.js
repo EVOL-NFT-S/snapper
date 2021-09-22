@@ -8,6 +8,8 @@ const getAddresses = async () => {
     await axios.get(api.GetAllERC20Tx(config.ADDRESS_TMC)).then((response) => {
         const { data } = response;
 
+        console.log(`tmc holders: ${data.result.length}`);
+
         for (const tx of data.result) {
             addresses.add(tx.from);
             addresses.add(tx.to);
@@ -17,6 +19,8 @@ const getAddresses = async () => {
     await axios.get(api.GetAllERC20Tx(config.ADDRESS_TME)).then((response) => {
         const { data } = response;
 
+        console.log(`tme holders: ${data.result.length}`);
+
         for (const tx of data.result) {
             addresses.add(tx.from);
             addresses.add(tx.to);
@@ -25,6 +29,8 @@ const getAddresses = async () => {
 
     await axios.get(api.GetAllERC721Tx(config.ADDRESS_TMA)).then((response) => {
         const { data } = response;
+
+        console.log(`tma holders: ${data.result.length}`);
 
         for (const tx of data.result) {
             addresses.add(tx.from);
