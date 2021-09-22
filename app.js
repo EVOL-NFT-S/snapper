@@ -1,20 +1,15 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-async-promise-executor */
 const { ethers } = require("ethers");
 const BigNumber = ethers.BigNumber;
 const { formatUnits } = require("ethers/lib/utils");
 
 const config = require("./config");
 const abi = require("./abi");
-
+const staking = require("./staking");
 const address = require("./address");
 
 const provider = new ethers.providers.JsonRpcProvider(
     "https://mainnet.infura.io/v3/f4dc51031cb040ee8ea63e05dc1a5311"
 );
-
-// const signer = provider.getSigner();
-// console.log(signer);
 
 const stakingContract = new ethers.Contract(
     config.ADDRESS_STAKING_POOL,
@@ -48,6 +43,7 @@ const app = async () => {
     const addresses = await address.getAddresses();
 
     console.log("addresses");
+
     const poolIds = [0, 1, 2, 3, 4, 5, 6];
     const pools = await Promise.all(
         poolIds.map((id) => stakingContract.getPool(id))
@@ -67,7 +63,7 @@ const app = async () => {
 
     const tmaBalances = await Promise.all(
         addresses.map((address) =>
-            tmaContract.balanceOf(address).catch((e) => BigNumber.from(0))
+            tmaContract.balanceOf(address).catch(() => BigNumber.from(0))
         )
     );
 
@@ -76,123 +72,33 @@ const app = async () => {
     for (let idx = 0; idx < pools.length; idx++) {
         const pool = pools[idx];
         const lpToken = pool[0];
-        // tma
-        if (lpToken === "0x0000000000000000000000000000000000000000") {
-            await Promise.all(
-                addresses.map(
-                    (address) =>
-                        new Promise(async (resolve, _reject) => {
-                            try {
-                                const staking = BigNumber.from(
-                                    await stakingContract.getUserInfoTamagIdSize(
-                                        idx,
-                                        address
-                                    )
-                                );
-                                tmaStakingBalances[address] =
-                                    tmaStakingBalances[address]
-                                        ? tmaStakingBalances[address].add(
-                                              staking
-                                          )
-                                        : staking;
 
-                                const reward = BigNumber.from(
-                                    (
-                                        await stakingContract.getUserInfo(
-                                            idx,
-                                            address
-                                        )
-                                    )[1]
-                                );
-                                tmcStakingBalances[address] =
-                                    tmcStakingBalances[address]
-                                        ? tmcStakingBalances[address].add(
-                                              reward
-                                          )
-                                        : reward;
-                                //console.log("TMA pool address")
-                                resolve("success");
-                            } catch (e) {
-                                // reject("failure");
-                                resolve("failure");
-                            }
-                        })
-                )
+        if (lpToken === "0x0000000000000000000000000000000000000000") {
+            await staking.scanTMAPool(
+                idx,
+                stakingContract,
+                addresses,
+                tmcStakingBalances,
+                tmaStakingBalances
             );
-            console.log("TMA pool");
         } else {
             if (lpToken === "0xe13559cf6eDf84bD04bf679e251f285000B9305E") {
-                await Promise.all(
-                    addresses.map(
-                        (address) =>
-                            new Promise(async (resolve, _reject) => {
-                                try {
-                                    const res =
-                                        await stakingContract.getUserInfo(
-                                            idx,
-                                            address
-                                        );
-                                    const [amount, reward] = [
-                                        BigNumber.from(res[0]),
-                                        BigNumber.from(res[1]),
-                                    ];
-
-                                    tmcStakingBalances[address] =
-                                        tmcStakingBalances[address]
-                                            ? tmcStakingBalances[address]
-                                                  .add(amount)
-                                                  .add(reward)
-                                            : amount.add(reward);
-                                    //console.log("TMC pool address")
-                                    resolve("success");
-                                } catch (e) {
-                                    // reject("failure");
-                                    resolve("failure");
-                                }
-                            })
-                    )
+                await staking.scanTMCPool(
+                    idx,
+                    stakingContract,
+                    addresses,
+                    tmcStakingBalances
                 );
-                console.log("TMC pool");
             } else if (
                 lpToken === "0x6E742E29395Cf5736c358538f0f1372AB3dFE731"
             ) {
-                await Promise.all(
-                    addresses.map(
-                        (address) =>
-                            new Promise(async (resolve, _reject) => {
-                                try {
-                                    const res =
-                                        await stakingContract.getUserInfo(
-                                            idx,
-                                            address
-                                        );
-
-                                    const [amount, reward] = [
-                                        BigNumber.from(res[0]),
-                                        BigNumber.from(res[1]),
-                                    ];
-                                    tmeStakingBalances[address] =
-                                        tmeStakingBalances[address]
-                                            ? tmeStakingBalances[address].add(
-                                                  amount
-                                              )
-                                            : amount;
-                                    tmcStakingBalances[address] =
-                                        tmcStakingBalances[address]
-                                            ? tmcStakingBalances[address].add(
-                                                  reward
-                                              )
-                                            : reward;
-                                    //console.log("TME pool address")
-                                    resolve("success");
-                                } catch (e) {
-                                    // reject("failure");
-                                    resolve("failure");
-                                }
-                            })
-                    )
+                await staking.scanTMEPool(
+                    idx,
+                    stakingContract,
+                    addresses,
+                    tmcStakingBalances,
+                    tmeStakingBalances
                 );
-                console.log("TME pool");
             } else {
                 const poolContract = new ethers.Contract(
                     lpToken,
@@ -211,52 +117,16 @@ const app = async () => {
                     await tmeContract.balanceOf(lpToken)
                 );
 
-                await Promise.all(
-                    addresses.map(
-                        (address) =>
-                            new Promise(async (resolve, _reject) => {
-                                try {
-                                    const res =
-                                        await stakingContract.getUserInfo(
-                                            idx,
-                                            address
-                                        );
-
-                                    const [amount, reward] = [
-                                        BigNumber.from(res[0]),
-                                        BigNumber.from(res[1]),
-                                    ];
-
-                                    const tmcAmount = amount
-                                        .div(totalSupply)
-                                        .mul(totalTmc);
-                                    const tmeAmount = amount
-                                        .div(totalSupply)
-                                        .mul(totalTme);
-
-                                    tmeStakingBalances[address] =
-                                        tmeStakingBalances[address]
-                                            ? tmeStakingBalances[address].add(
-                                                  tmeAmount
-                                              )
-                                            : tmeAmount;
-
-                                    tmcStakingBalances[address] =
-                                        tmcStakingBalances[address]
-                                            ? tmcStakingBalances[address]
-                                                  .add(tmcAmount)
-                                                  .add(reward)
-                                            : tmcAmount.add(reward);
-                                    //console.log("TMC/TME pool address")
-                                    resolve("success");
-                                } catch (e) {
-                                    // reject("failure");
-                                    resolve("failure");
-                                }
-                            })
-                    )
+                await staking.scanTMCTMEPool(
+                    idx,
+                    stakingContract,
+                    addresses,
+                    tmcStakingBalances,
+                    tmeStakingBalances,
+                    totalSupply,
+                    totalTmc,
+                    totalTme
                 );
-                console.log("TMC/TME pool");
             }
         }
 
