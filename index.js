@@ -4,6 +4,7 @@ const tme = require("./tme");
 const tma = require("./tma");
 
 const transaction = require("./transaction");
+const address = require("./address");
 
 // 1; TMC <> Staking Pool
 /* transaction.printERC20Txs(
@@ -49,3 +50,9 @@ transaction.printERC721Txs(
 
 // before 5; TMA all
 // transaction.printAllERC721Txs(config.ADDRESS_TMA);
+
+/* const run = async () => {
+    console.log(await address.getAddresses());
+}; 
+
+run(); */
