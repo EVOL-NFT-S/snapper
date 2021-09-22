@@ -21,3 +21,18 @@ Still for ERC721 tokens, `Export as CSV` option doesn't exist, so in this case s
 4. \[3rd-party Service\] Using [TheGraph](https://thegraph.com/)
 
 Challenging, not yet tried.
+
+## How to Run
+
+### Install
+
+`npm install`
+
+### Run
+
+-   `npm start`
+    Run index.js
+
+-   `node app-light.js`
+
+-   `node app.js`
