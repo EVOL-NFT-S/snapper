@@ -50,13 +50,17 @@ const app = async () => {
     );
 
     const tmcBalances = await Promise.all(
-        addresses.map((address) => tmcContract.balanceOf(address))
+        addresses.map((address) =>
+            tmcContract.balanceOf(address).catch(() => BigNumber.from(0))
+        )
     );
 
     console.log("tmc balances");
 
     const tmeBalances = await Promise.all(
-        addresses.map((address) => tmeContract.balanceOf(address))
+        addresses.map((address) =>
+            tmeContract.balanceOf(address).catch(() => BigNumber.from(0))
+        )
     );
 
     console.log("tme balances");

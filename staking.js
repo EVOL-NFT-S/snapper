@@ -27,14 +27,24 @@ const scanTMAPool = async (
                             ? tmaStakingBalances[address].add(staking)
                             : staking;
 
-                        const reward = BigNumber.from(
-                            (
-                                await stakingContract.getUserInfo(
+                        const reward = BigNumber.from(0);
+
+                        for (let i = 0; i < staking.toNumber(); i++) {
+                            const tamagId =
+                                await stakingContract.getUserInfoTamagIdAtIndex(
                                     poolId,
-                                    address
-                                )
-                            )[1]
-                        );
+                                    address,
+                                    i
+                                );
+                            const pending =
+                                await stakingContract.pendingTMCForTamag(
+                                    poolId,
+                                    address,
+                                    tamagId
+                                );
+                            reward.add(pending);
+                        }
+
                         tmcStakingBalances[address] = tmcStakingBalances[
                             address
                         ]
@@ -63,14 +73,19 @@ const scanTMCPool = async (
             (address) =>
                 new Promise(async (resolve, _reject) => {
                     try {
-                        const res = await stakingContract.getUserInfo(
+                        const amount = BigNumber.from(
+                            (
+                                await stakingContract.getUserInfo(
+                                    poolId,
+                                    address
+                                )
+                            )[0]
+                        );
+
+                        const reward = await stakingContract.pendingTMC(
                             poolId,
                             address
                         );
-                        const [amount, reward] = [
-                            BigNumber.from(res[0]),
-                            BigNumber.from(res[1]),
-                        ];
 
                         tmcStakingBalances[address] = tmcStakingBalances[
                             address
@@ -103,15 +118,20 @@ const scanTMEPool = async (
             (address) =>
                 new Promise(async (resolve, _reject) => {
                     try {
-                        const res = await stakingContract.getUserInfo(
+                        const amount = BigNumber.from(
+                            (
+                                await stakingContract.getUserInfo(
+                                    poolId,
+                                    address
+                                )
+                            )[0]
+                        );
+
+                        const reward = await stakingContract.pendingTMC(
                             poolId,
                             address
                         );
 
-                        const [amount, reward] = [
-                            BigNumber.from(res[0]),
-                            BigNumber.from(res[1]),
-                        ];
                         tmeStakingBalances[address] = tmeStakingBalances[
                             address
                         ]
@@ -149,15 +169,19 @@ const scanTMCTMEPool = async (
             (address) =>
                 new Promise(async (resolve, _reject) => {
                     try {
-                        const res = await stakingContract.getUserInfo(
+                        const amount = BigNumber.from(
+                            (
+                                await stakingContract.getUserInfo(
+                                    poolId,
+                                    address
+                                )
+                            )[0]
+                        );
+
+                        const reward = await stakingContract.pendingTMC(
                             poolId,
                             address
                         );
-
-                        const [amount, reward] = [
-                            BigNumber.from(res[0]),
-                            BigNumber.from(res[1]),
-                        ];
 
                         const tmcAmount = amount.div(totalSupply).mul(totalTmc);
                         const tmeAmount = amount.div(totalSupply).mul(totalTme);

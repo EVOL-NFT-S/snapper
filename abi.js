@@ -2275,7 +2275,7 @@ const ABI_TMA = [
     },
 ];
 
-ABI_UNIV2_PAIR = [
+const ABI_UNIV2_PAIR = [
     {
         inputs: [],
         payable: false,
