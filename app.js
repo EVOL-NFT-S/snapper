@@ -82,7 +82,6 @@ const app = async () => {
                 stakingContract,
                 addresses,
                 tmcRewards,
-                tmcStakingBalances,
                 tmaStakingBalances
             );
         } else {
@@ -100,7 +99,6 @@ const app = async () => {
                     stakingContract,
                     addresses,
                     tmcRewards,
-                    tmcStakingBalances,
                     tmeStakingBalances
                 );
             } else {
