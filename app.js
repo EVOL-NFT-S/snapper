@@ -75,7 +75,7 @@ const app = async () => {
         const pool = pools[idx];
         const lpToken = pool[0];
 
-        if (lpToken === "0x0000000000000000000000000000000000000000") {
+        if (lpToken === config.ADDRESS_NULL) {
             await staking.scanTMAPool(
                 idx,
                 stakingContract,
@@ -84,16 +84,14 @@ const app = async () => {
                 tmaStakingBalances
             );
         } else {
-            if (lpToken === "0xe13559cf6eDf84bD04bf679e251f285000B9305E") {
+            if (lpToken === config.ADDRESS_TMC) {
                 await staking.scanTMCPool(
                     idx,
                     stakingContract,
                     addresses,
                     tmcStakingBalances
                 );
-            } else if (
-                lpToken === "0x6E742E29395Cf5736c358538f0f1372AB3dFE731"
-            ) {
+            } else if (lpToken === config.ADDRESS_TME) {
                 await staking.scanTMEPool(
                     idx,
                     stakingContract,

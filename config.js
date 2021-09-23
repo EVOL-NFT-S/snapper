@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -15,6 +16,8 @@ const ADDRESS_TMA = process.env.ADDRESS_TMA;
 
 const INFURA_ENDPOINT = process.env.INFURA_ENDPOINT;
 
+const ADDRESS_NULL = "0x0000000000000000000000000000000000000000";
+
 const ADDRESS_TMG = "0xa6D82Fc1f99A868EaaB5c935fe7ba9c9e962040E";
 const ADDRESS_UNIV2_TMC_TME = "0x487D290c95212e921b154DAbF43eF17220419ce0";
 const ADDRESS_UNIV2_ETH_TMC = "0x4FC850399f4D3BFD706702803cc57Ce192716897";
@@ -30,4 +33,5 @@ module.exports = {
     ADDRESS_TME,
     ADDRESS_TMA,
     INFURA_ENDPOINT,
+    ADDRESS_NULL,
 };
