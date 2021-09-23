@@ -36,6 +36,7 @@ const tmaContract = new ethers.Contract(
 const tmaStakingBalances = {};
 const tmcStakingBalances = {};
 const tmeStakingBalances = {};
+const tmcRewards = {};
 
 const app = async () => {
     const addresses = await address.getAddresses();
@@ -80,6 +81,7 @@ const app = async () => {
                 idx,
                 stakingContract,
                 addresses,
+                tmcRewards,
                 tmcStakingBalances,
                 tmaStakingBalances
             );
@@ -89,6 +91,7 @@ const app = async () => {
                     idx,
                     stakingContract,
                     addresses,
+                    tmcRewards,
                     tmcStakingBalances
                 );
             } else if (lpToken === config.ADDRESS_TME) {
@@ -96,6 +99,7 @@ const app = async () => {
                     idx,
                     stakingContract,
                     addresses,
+                    tmcRewards,
                     tmcStakingBalances,
                     tmeStakingBalances
                 );
@@ -121,6 +125,7 @@ const app = async () => {
                     idx,
                     stakingContract,
                     addresses,
+                    tmcRewards,
                     tmcStakingBalances,
                     tmeStakingBalances,
                     totalSupply,
@@ -155,6 +160,7 @@ const app = async () => {
                         ? tmaStakingBalances[address]
                         : 0
                 )
+                .add(tmcRewards[address] ? tmcRewards[address] : 0)
                 .gt(0)
         ) {
             console.log(
@@ -172,6 +178,10 @@ const app = async () => {
                 } ${
                     tmaStakingBalances[address]
                         ? tmaStakingBalances[address]
+                        : 0
+                } ${
+                    tmcRewards[address]
+                        ? formatUnits(tmcRewards[address], 18)
                         : 0
                 }`
             );

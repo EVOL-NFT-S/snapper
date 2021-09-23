@@ -7,7 +7,7 @@ const scanTMAPool = async (
     poolId,
     stakingContract,
     addresses,
-    tmcStakingBalances,
+    tmcRewards,
     tmaStakingBalances
 ) => {
     await Promise.all(
@@ -45,10 +45,8 @@ const scanTMAPool = async (
                             reward = reward.add(pending);
                         }
 
-                        tmcStakingBalances[address] = tmcStakingBalances[
-                            address
-                        ]
-                            ? tmcStakingBalances[address].add(reward)
+                        tmcRewards[address] = tmcRewards[address]
+                            ? tmcRewards[address].add(reward)
                             : reward;
                         //console.log("TMA pool address")
                         resolve("success");
@@ -66,6 +64,7 @@ const scanTMCPool = async (
     poolId,
     stakingContract,
     addresses,
+    tmcRewards,
     tmcStakingBalances
 ) => {
     await Promise.all(
@@ -87,13 +86,15 @@ const scanTMCPool = async (
                             address
                         );
 
+                        tmcRewards[address] = tmcRewards[address]
+                            ? tmcRewards[address].add(reward)
+                            : reward;
+
                         tmcStakingBalances[address] = tmcStakingBalances[
                             address
                         ]
-                            ? tmcStakingBalances[address]
-                                  .add(amount)
-                                  .add(reward)
-                            : amount.add(reward);
+                            ? tmcStakingBalances[address].add(amount)
+                            : amount;
                         //console.log("TMC pool address")
                         resolve("success");
                     } catch (e) {
@@ -110,7 +111,7 @@ const scanTMEPool = async (
     poolId,
     stakingContract,
     addresses,
-    tmcStakingBalances,
+    tmcRewards,
     tmeStakingBalances
 ) => {
     await Promise.all(
@@ -137,10 +138,8 @@ const scanTMEPool = async (
                         ]
                             ? tmeStakingBalances[address].add(amount)
                             : amount;
-                        tmcStakingBalances[address] = tmcStakingBalances[
-                            address
-                        ]
-                            ? tmcStakingBalances[address].add(reward)
+                        tmcRewards[address] = tmcRewards[address]
+                            ? tmcRewards[address].add(reward)
                             : reward;
                         //console.log("TME pool address")
                         resolve("success");
@@ -158,6 +157,7 @@ const scanTMCTMEPool = async (
     poolId,
     stakingContract,
     addresses,
+    tmcRewards,
     tmcStakingBalances,
     tmeStakingBalances,
     totalSupply,
@@ -195,10 +195,12 @@ const scanTMCTMEPool = async (
                         tmcStakingBalances[address] = tmcStakingBalances[
                             address
                         ]
-                            ? tmcStakingBalances[address]
-                                  .add(tmcAmount)
-                                  .add(reward)
-                            : tmcAmount.add(reward);
+                            ? tmcStakingBalances[address].add(tmcAmount)
+                            : tmcAmount;
+
+                        tmcRewards[address] = tmcRewards[address]
+                            ? tmcRewards[address].add(reward)
+                            : reward;
                         //console.log("TMC/TME pool address")
                         resolve("success");
                     } catch (e) {
